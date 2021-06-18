@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css">
+    <script src="/node_modules/jquery/dist/jquery.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <link rel="stylesheet" href="/Fonts/css/all.css">
+    <title>Document of District</title>
+    <style>
+        #table-container{
+            margin-left: auto;
+            margin-right: auto;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        #table-container th{
+            padding-top: 12px;
+            padding-bottom: 12px;
+            font-size: 20px;
+            text-align: left;
+            background-color: turquoise;
+            color: white;
+
+        }
+        #table-container td, #table-container th{
+            border: 1px solid black;
+            padding: 8px;
+
+        }
+    </style>
+</head>
+
+<body class="container-fluid">
+    <nav class="navbar navbar-dark " style="background-color:rgb(21, 3, 104)">
+        <a class="nav-link" href="#" style="color: white;">
+            <p style="font-family: 'Times New Roman', Times, serif;"><b>Ministry of Health and Family Welfar</b></p>
+        </a>
+        <a class="nav-link" href="#" style="color: white;"><span class="fa fa-home"></span> FAQ</a>
+        <a class="nav-link" href="#" style="color: white;"><span class="fab fa-salesforce"></span> Dashboard</a>
+
+        <a class="nav-link" href="#" style="color: white;"><span class="fas fa-upload"></span>Open APIs</a>
+
+        <a class="nav-link" href="#" style="color: white;"> <span class="fas fa-address-card"></span> Department Login
+        </a>
+
+        <a class="nav-link" href="#" style="color: white"><span class="far fa-id-badge"></span> Vaccinator
+            US</a>
+
+        <a class="nav-link" href="#" style="color: white;"><span class="fas fa-registered"></span>
+            Verify Certificate</a>
+
+
+    </nav> <br>
+    <br>
+    <img src="/images/largest-vaccine-banner.jpg" style="width: 100%;height: 400px;">
+
+    <div class="container">
+
+        <h4 class="text-center">Check your nearest vaccination center and slots availability</h4>
+    </div>
+    <div class="container">
+        <h1>Covid Application</h1>
+        <div class="form-group">
+            <label for="states-label">Select State :</label>
+            <select id="state-select" class="form-control"></select>
+        </div>
+
+        <div class="form-group">
+            <label for="district-label">Select District :</label>
+            <select id="district-select" class="form-control"></select>
+        </div>
+        <button class="btn btn-danger btn-block">Search</button>
+        <div class="main">
+            <h3 class="text-center mt-2" style="background: cornflowerblue; color: white; "   >Vaccination Details</h3>
+            <table border="1" id="table-container" class="mt-2">
+                <thead>
+                    <tr>
+                        <th style="text-align: center "width="400" >Place</th>
+                        <th style="text-align: center "width="300">Free/ Paid</th>
+                        <th style="text-align: center "width="400">Type of Vaccination</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="place"></td>
+                        <td id="free-paid"></td>
+                        <td id="availableslots"></td>
+
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    <div class="container">
+        <div class="form-group">
+            <label>Search by Pin</label>
+            <input class="form-control" id="pin" type="number" maxlength="6" minlength="6" placeholder="Enter Pin"
+                name="pin">
+        </div>
+        <table class="table" id="session">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>18+</th>
+                    <th>45+</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <button type="button" id="searchbtn" class="btn btn-danger">Search by Pin</button>
+    </div>
+
+
+    <div class="container1 mt-3 mb-2">
+        <img src="../../images/Capture1.PNG" style="width: 100%;">s
+    </div>
+
+    <script src="./dolly.js"></script>
+    <script>
+
+
+        $(document).ready(function () {
+            $("#searchbtn").click(function () {
+                var pin = $('#pin').val();
+                if (pin == '' || pin == undefined) {
+                    alert('Please Enter Pin Code');
+                }
+                $.get("https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=" + pin + "&date=22-05-2021", function (data, status) {
+                    // alert("Data" + data + "\nStatus: " + status);
+                    var result = [i];
+                    result = data.sessions;
+                    console.log(result);
+                    if (result) {
+                        for (var i = 0; i < result.length; i++) {
+                            var resultData = {}
+                            resultData = result[i];
+                            console.log(resultData);
+                            $('#session tbody').append('<tr class="child"><td>' + resultData.name + '</td><td>' + resultData.available_capacity + '</td><td>' + resultData.available_capacity_dose2 + '</td></tr>');
+                        }
+                    }
+                });
+            });
+
+        });
+    </script>
+
+
+</body>
+
+</html>
